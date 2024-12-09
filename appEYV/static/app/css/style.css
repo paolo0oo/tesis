@@ -1,0 +1,475 @@
+
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+/* El contenedor que envuelve el contenido debe crecer para llenar el espacio disponible */
+#content {
+    flex: 1;
+}
+
+/* El footer debe mantenerse en la parte inferior */
+footer {
+    background-color: #222; /* Color de fondo del footer, ajusta según lo que necesites */
+    color: #fff;
+    padding: 10px;
+    text-align: center;
+}
+
+
+.navbar-custom {
+
+    background: rgb(0, 0, 0);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 32%, rgba(67, 67, 161, 1) 68%, rgba(26, 5, 187, 1) 100%);
+    padding: 10px 0;
+    height: 150px;
+}
+
+.navbar-brand {
+    font-size: 1rem;
+}
+
+.navbar-nav .nav-link {
+    color: white !important;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.btn-custom {
+    background-color: #4343a1 !important;
+    border-color: #4343a1!important;
+    color: white !important;
+    font-size: 0.9rem;
+    padding: 5px 10px;
+}
+
+.btn-custom:hover {
+    background-color: #1a05bb !important;
+}
+
+.form-control {
+    border-radius: 0;
+    height: 32px;
+    font-size: 0.9rem;
+}
+
+.input-group-text {
+    background-color: white;
+    border: none;
+}
+
+.input-group .btn {
+    height: 32px;
+}
+
+.botones {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+#product-container {
+    display: none;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+.product-card {
+    display: none;
+    width: 250px;
+    height: auto;
+    margin: 0 auto;
+    /* Para centrar las tarjetas */
+    border: 1px solid #e1e1e1;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.product-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.price {
+    font-size: 24px;
+    color: black !important;
+    margin-bottom: 5px;
+}
+
+
+
+.btn-cart {
+    background-color: #4343a1 !important;
+    color: white !important;
+    margin-top: 15px;
+}
+
+.section-title {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 28px;
+    color: #4343a1 !important;
+}
+
+.sidebar {
+    height: 100%;
+    /* Altura total */
+    width: 0;
+    /* Ancho inicial cerrado */
+    position: fixed;
+    /* Fijo a la izquierda */
+    top: 0;
+    left: 0;
+    background: black;
+    /* Color de fondo oscuro */
+    overflow-x: hidden;
+    /* Desactiva el scroll horizontal */
+    transition: 0.5s;
+    /* Transición suave */
+    padding-top: 60px;
+    /* Espacio en la parte superior */
+}
+
+.sidebar a {
+    padding: 10px 15px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #fff;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #575757;
+}
+
+.h2 {
+    color: white;
+}
+
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+}
+
+/* Estilo para la página cuando se despliega el sidebar */
+#main {
+    transition: margin-left 0.5s;
+}
+
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: gainsboro;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+/* diseño recuadro de login */
+.dropdown-menu {
+    width: 400px;
+    padding: 100px;
+    text-align: justify;
+    text-decoration-color: #ddd;
+
+    
+}
+
+
+#loginForm .form-control {
+    margin-bottom: 50px;
+    border-image-width:auto;
+    
+    
+}
+  /* fin del disñeo */
+
+#registerLink {
+    color: #007bff;
+    cursor: pointer;
+}
+
+#registerLink:hover {
+    text-decoration: underline;
+}
+
+/* Footer personalizado */
+.footer-custom {
+    background: rgb(0, 0, 0);
+    background: linear-gradient(90deg, rgba(0, 0, 0, 1) 32%, rgba(67, 67, 161, 1) 68%, rgba(26, 5, 187, 1) 100%);
+    width: 100% !important;
+    color: white;
+}
+
+.footer-custom h5 {
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.footer-custom p {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Formulario de contacto */
+.footer-custom .form-control {
+    background-color: #D0DED7;
+    border: 1px solid #ccc;
+}
+
+.footer-custom button {
+    background-color: rgba(67, 67, 161, 1);
+    color: white;
+    border: none;
+    width: 100%;
+}
+
+.footer-custom button:hover {
+    background-color: rgba(26, 5, 187, 1);
+}
+
+.footer-custom img {
+    max-width: 100%;
+}
+
+/* Estilos de las tarjetas y la paginación */
+
+
+.product-card {
+    width: 200px;
+    /* Ajusta el tamaño de las tarjetas de productos */
+    margin: 15px;
+    text-align: center;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+
+
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.product-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.price {
+    font-size: 24px;
+    color: #28a745;
+    margin-bottom: 5px;
+}
+
+
+
+.btn-cart {
+    background-color: #007bff;
+    color: white;
+    margin-top: 15px;
+}
+
+.section-title {
+    text-align: center;
+    margin: 40px 0;
+    font-size: 28px;
+    color: #28a745;
+}
+
+.pagination-controls {
+    margin: 20px;
+}
+
+#prevPage,
+#nextPage {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#prevPage:disabled,
+#nextPage:disabled {
+    background-color: #ccc;
+}
+
+#prevPage:hover:not(:disabled),
+#nextPage:hover:not(:disabled) {
+    background-color: #45a049;
+}
+
+#product-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* Centra los productos horizontalmente */
+}
+
+
+.row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.sugerencias-lista {
+    background-color: white;
+
+    max-height: 150px;
+    overflow-y: auto;
+    position: absolute;
+    width: 100%;
+    z-index: 1000;
+    margin-top: 40px;
+    /* Ajusta el margen superior para que las sugerencias se vean más abajo */
+}
+
+.sugerencia-item {
+    padding: 8px;
+    cursor: pointer;
+}
+
+.sugerencia-item:hover {
+    background-color: #f0f0f0;
+}
+
+#carrito-contenido {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    display: none;
+    width: 1000px;
+    max-height: 1000px;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+#carrito-btn:focus+#carrito-contenido,
+#carrito-btn:active+#carrito-contenido {
+    display: block;
+    /* Mostrar el dropdown al hacer clic */
+}
+
+.alert {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    padding: 10px;
+    border-radius: 5px;
+    opacity: 0.9;
+}
+
+/* Ancho y alto del dropdown del carrito */
+
+
+/* Lista de productos del carrito */
+#carrito-items .list-group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Imagen del producto */
+#carrito-items img {
+    width: 50px;
+    /* Tamaño de la imagen */
+    height: auto;
+    margin-right: 10px;
+}
+
+/* Botones de cantidad */
+#carrito-items .btn-light {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+/* Botón eliminar */
+#carrito-items .btn-danger {
+    margin-left: 10px;
+    white-space: nowrap;
+    /* Evita que el texto del botón se divida en varias líneas */
+}
+
+/* Carrito total y botón de checkout */
+#checkout-btn {
+    width: 100%;
+    /* Hacer el botón de "Ir a pagar" más ancho */
+}
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pagination .step-links {
+    display: inline-flex;
+    gap: 10px;
+}
+
+.pagination .button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+    border: 1px solid #007bff;
+}
+
+
+/*paypal*/
+.pagination .button:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+.pagination .current {
+    padding: 10px;
+    font-weight: bold;
+}
+
+.payment-section {
+        text-align: center;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+}
+.payment-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+
+}
+#paypal-button-container {
+        margin-top: 20px;
+
+}

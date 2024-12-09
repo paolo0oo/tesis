@@ -1,0 +1,261 @@
+{% extends 'app/base.html' %}
+
+{% load static %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+<script src="{% static 'app/js/script.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+{% endblock %}
+
+{% block contenido %}
+<div class="container">
+    <!-- Título -->
+    <h2 class="section-title">Te recomendamos</h2>
+
+    <!--Filtro De Productos linterna y herramientas-->
+    <div class="filtroProductos">
+        <a href="{% url 'product_list' %}" class="btn btn-secondary {% if not tipo %}active{% endif %}">Todos</a>
+        <a href="{% url 'product_list' %}?tipo=Linterna"
+            class="btn btn-secondary {% if tipo == 'Linterna' %}active{% endif %}">Linterna</a>
+        <a href="{% url 'product_list' %}?tipo=Herramienta"
+            class="btn btn-secondary {% if tipo == 'Herramienta' %}active{% endif %}">Herramientas</a>
+    </div>
+
+
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-outline-primary" data-bs-toggle="offcanvas" data-bs-target="#cart-sidebar">
+            Ver Carrito
+        </button>
+    </div>
+
+
+    <div class="container">
+        <h2 class="text-center mb-4">Productos</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for producto in page_obj %}
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="text-center p-3">
+                        <img src="{{ producto.Imagen.url }}" class="card-img-top img-fluid"
+                            alt="{{ producto.nombre_prod }}"
+                            style="height: 200px; width: 100%; object-fit: contain; background-color: #f8f9fa;">
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-center">{{ producto.nombre_prod }}</h5>
+                        <p class="card-text text-center text-muted">${{ producto.Precio }}</p>
+                        <div class="mt-auto text-center">
+                            <button class="btn btn-outline-dark btn-sm add-to-cart" data-id="{{ producto.ID_prod }}"
+                                data-name="{{ producto.nombre_prod }}" data-price="{{ producto.Precio }}"
+                                data-image="{{ producto.Imagen.url }}">
+                                Agregar al carrito
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>No hay productos disponibles.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+   <!-- Carrito de Compras -->
+   <div id="cart-sidebar" class="offcanvas offcanvas-end" style="width: 500px; height: 100%;" tabindex="-1"
+   aria-labelledby="cartLabel">
+   <div class="offcanvas-header">
+       <h5 id="cartLabel">Carrito de Compras</h5>
+       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+   </div>
+   <div class="offcanvas-body">
+       <ul id="cart-items" class="list-group mb-3">
+           <!-- Los productos añadidos al carrito se renderizan aquí dinámicamente -->
+       </ul>
+       <div class="d-flex justify-content-between align-items-center">
+           <strong>Total:</strong>
+           <span id="cart-total" class="fw-bold">$0.00</span>
+       </div>
+       <form id="checkout-form" method="post" action="/appEYV/templates/app/pago.html">
+           {% csrf_token %}
+       </form>
+       
+
+       <button id="checkout-btn" type="button" class="btn btn-primary w-100 mt-3">Ir a Pagar</button>
+   </div>
+</div>
+<script>
+   const cartItems = JSON.parse(sessionStorage.getItem('cart')) || [];
+   const cartItemsList = document.getElementById('cart-items');
+   const cartTotal = document.getElementById('cart-total');
+
+   // Renderizar el carrito
+   const renderCart = () => {
+       cartItemsList.innerHTML = '';
+       let total = 0;
+
+       cartItems.forEach((item, index) => {
+           const listItem = document.createElement('li');
+           listItem.className = 'list-group-item d-flex justify-content-between align-items-center';
+           listItem.innerHTML = `
+   <div>
+       <img src="${item.image}" alt="${item.name}" style="width: 50px; height: 50px;" class="me-2">
+       <span>${item.name}</span>
+   </div>
+   <div>
+       <input type="number" value="${item.quantity}" min="1" data-index="${index}" class="form-control form-control-sm quantity-input" style="width: 60px;">
+       <span class="ms-3 fw-bold">$${(item.price * item.quantity).toFixed(2)}</span>
+       <button class="btn btn-sm btn-danger ms-3 remove-item" data-index="${index}">&times;</button>
+   </div>
+   `;
+           cartItemsList.appendChild(listItem);
+           total += item.price * item.quantity;
+       });
+
+       cartTotal.textContent = `$${total.toFixed(2)}`;
+       sessionStorage.setItem('cart', JSON.stringify(cartItems));
+   };
+
+   // Agregar producto al carrito
+   document.querySelectorAll('.add-to-cart').forEach(button => {
+       button.addEventListener('click', () => {
+           const product = {
+               id: button.dataset.id,
+               name: button.dataset.name,
+               type: button.dataset.type,
+               price: parseFloat(button.dataset.price),
+               image: button.dataset.image,
+               quantity: 1
+           };
+
+           const existingProduct = cartItems.find(item => item.id === product.id);
+           if (existingProduct) {
+               existingProduct.quantity += 1;
+           } else {
+               cartItems.push(product);
+           }
+
+           renderCart();
+           const offcanvas = new bootstrap.Offcanvas(document.getElementById('cart-sidebar'));
+           offcanvas.show();
+       });
+   });
+
+   // Actualizar cantidades y eliminar productos
+   cartItemsList.addEventListener('change', e => {
+       if (e.target.classList.contains('quantity-input')) {
+           const index = e.target.dataset.index;
+           cartItems[index].quantity = parseInt(e.target.value);
+           renderCart();
+       }
+   });
+
+   cartItemsList.addEventListener('click', e => {
+       if (e.target.classList.contains('remove-item')) {
+           const index = e.target.dataset.index;
+           cartItems.splice(index, 1);
+           renderCart();
+       }
+   });
+
+   document.getElementById('checkout-btn').addEventListener('click', () => {
+const total = parseFloat(cartTotal.textContent.replace('$', ''));
+
+const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+// Enviar el total al backend
+fetch('/guardar-carrito/', {
+   method: 'POST',
+   headers: {
+       'Content-Type': 'application/json',
+       'X-CSRFToken': csrfToken
+   },
+   body: JSON.stringify({ total })
+})
+   .then(response => {
+       if (response.ok) {
+           window.location.href = '/pago/'; // Redirige a la página de pago
+       } else {
+           console.error('Error al guardar el carrito.');
+       }
+   })
+   .catch(error => {
+       console.error('Fetch error:', error);
+   });
+});
+
+
+
+   // Renderizar el carrito al cargar la página
+   renderCart();
+
+</script>
+    <style>
+        .cart-sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100%;
+            background: #fff;
+            border-left: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            transition: right 0.3s ease-in-out;
+            z-index: 1050;
+        }
+
+        .cart-sidebar.open {
+            right: 0;
+        }
+
+        .cart-header,
+        .cart-footer {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .cart-items {
+            padding: 10px;
+            overflow-y: auto;
+            max-height: calc(100% - 100px);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+    </style>
+
+
+
+
+
+    <div class="pagination justify-content-center my-5">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+            <a href="?page=1" class="btn btn-primary me-2">&laquo; Primera</a>
+            <a href="?page={{ page_obj.previous_page_number }}" class="btn btn-primary me-2">Anterior</a>
+            {% endif %}
+
+            <span class="current btn btn-secondary disabled">
+                Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="btn btn-primary ms-2">Siguiente</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}" class="btn btn-primary ms-2">Ultima &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+</div>
+{% endblock %}

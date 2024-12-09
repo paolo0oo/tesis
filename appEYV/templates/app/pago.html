@@ -1,0 +1,101 @@
+{% extends 'app/base.html' %}
+
+{% load static %}
+
+{% block js %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.js"></script>
+<script src="{% static 'app/js/script.js' %}"></script>
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'app/css/style.css' %}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+  integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+{% endblock %}
+
+{% block contenido %}
+
+</head>
+<body>
+    <div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+        <div class="payment-section text-center p-4 border rounded bg-white shadow">
+            <h1 class="payment-title">Selecciona tu forma de Pago</h1>
+            <p><div class="price">${{ total }}</div></p>
+            <!-- Contenedor para el botón de PayPal -->
+            <div id="paypal-button-container" class="container text-center"></div>
+            <form action="/iniciar-pago-transbank/" method="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger w-100 mt-3">Pagar con Transbank</button>
+            </form>
+        </div>
+    </div>
+    
+    
+    
+    
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+    
+  
+
+
+<!-- SDK de PayPal -->
+<script src="https://www.paypal.com/sdk/js?client-id=AU475HzYuq30Ew9Z6sEpf_64O-dEFELeexT-a7zvkyP0d2kY_wV7WTWOxCR768wG7M96hwobJPQOWm2-&currency=USD"></script>
+
+<!-- Script para configurar el botón de PayPal -->
+<script>
+  paypal.Buttons({
+    style: {
+        color: 'blue',
+        shape: 'pill',
+        label: 'pay'
+    },
+    createOrder: function(data, actions) {
+        return actions.order.create({
+            purchase_units: [{
+                amount: {
+                    value: "{{ total }}",  // Aquí se utiliza el total dinámico
+                    currency_code: 'USD'
+                },
+            }]
+        });
+    },
+    onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+            console.log(details);
+            fetch('/procesar-pago/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify(details)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Pago almacenado correctamente');
+                } else {
+                    alert('Hubo un error al almacenar el pago');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    },
+    onCancel: function(data) {
+        alert("Pago cancelado");
+        console.log(data);
+    }
+}).render('#paypal-button-container');
+
+</script>
+</body>
+</html>
+{% endblock %}

@@ -1,0 +1,24 @@
+
+{% load filters %}
+
+<th>Precio Unitario</th>
+<th>Subtotal</th>
+</tr>
+</thead>
+<tbody>
+    {% for item in cart.values %}
+    <tr>
+        <td>{{ item.nombre_prod }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.Precio }}</td>
+        <td>${{ item.Precio|multiply:item.cantidad }}</td>  <!-- Aquí usamos el filtro -->
+    </tr>
+    {% endfor %}
+</tbody>
+<tfoot>
+    <tr>
+        <th colspan="3" class="text-end">Total:</th>
+        <th>${{ total }}</th>
+    </tr>
+</tfoot>
+</table>
